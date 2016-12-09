@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 5a78cdde784ec5e4f804a7ae5551df2e
+timeCreated: 1481026737
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - Brick1Prefab: {fileID: 1000011542978448, guid: cac0f2a9a22c6934e9be8af4430cff62,
+      type: 2}
+  - Brick2Prefab: {fileID: 1000012539308894, guid: 98db1c0659609a5428c54d725c8369a9,
+      type: 2}
+  - Brick3Prefab: {fileID: 1000014157484756, guid: d4d01cac9d2b4a6419f993dd7e9648c7,
+      type: 2}
+  - Brick4Prefab: {fileID: 1000011899803906, guid: b0aa14013383a07408f7220dfa7b5726,
+      type: 2}
+  - Brick5Prefab: {fileID: 1000014263168744, guid: f39817adb81d2d2458f7c6967c186d7e,
+      type: 2}
+  - HardBlockPrefab: {fileID: 1000010579212048, guid: a488015d030300246abb91e14ff40ea5,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
