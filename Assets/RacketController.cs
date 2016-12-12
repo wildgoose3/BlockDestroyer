@@ -32,17 +32,12 @@ public class RacketController : MonoBehaviour
         Title = GameObject.Find("Title");
         Next = GameObject.Find("Next");
         Shield = GameObject.Find("Shield");
-
-        Debug.Log(this.gameObject.name);
-        Debug.Log(Restart.gameObject.name);
-        Debug.Log(Title.gameObject.name);
-        Debug.Log(Next.gameObject.name);
-        Debug.Log(Shield.gameObject.name);
+        
         Restart.SetActive(false);
         Title.SetActive(false);
         Next.SetActive(false);
 
-        RB.GetComponent<Rigidbody>();   
+        RB=GetComponent<Rigidbody>();   
 
         Shield.GetComponent<MeshRenderer>().enabled = false;
         Shield.GetComponent<Collider>().enabled = false;
@@ -57,39 +52,31 @@ public class RacketController : MonoBehaviour
         NextGameStart();
 
         Param.PlayedTime=0;
-        }
+      }
 
 // Update is called once per frame
-void Update()
+    void Update()
     {
-        Debug.Log(this.gameObject.name);
-        Debug.Log(Restart.gameObject.name);
-        Debug.Log(Title.gameObject.name);
-        Debug.Log(Next.gameObject.name);
-        Debug.Log(Shield.gameObject.name);
-        // ShieldControl();
+        ShieldControl();
         VanishControl();
         if (Param.Moving)
         {
             Param.PlayedTime += Time.deltaTime;
         }
-            if (Input.GetKey(KeyCode.LeftArrow) || Param.SPDirection == "left")
-            {
-                Param.Move = -15;
-            }
-            else if (Input.GetKey(KeyCode.RightArrow) || Param.SPDirection == "right")
-            {
-                Param.Move = 15;
-            }
-            else
-            {
-                Param.Move = 0;
-            }
-            //this.RB.velocity = new Vector3(0, 0, 0);
-        //実行中
-        if (this.RB == null) Debug.Break();
+        if (Input.GetKey(KeyCode.LeftArrow) || Param.SPDirection == "left")
+        {
+            Param.Move = -15;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Param.SPDirection == "right")
+        {
+            Param.Move = 15;
+        }
+        else
+        {
+            Param.Move = 0;
+        }
+        this.RB.velocity = new Vector3(0, 0, 0);
         this.transform.Translate(Param.Move / 100, 0, 0, Space.World);
-        
         if (Param.BallRest <= 0)
         {
             GetComponent<MeshRenderer>().enabled = false;
@@ -146,8 +133,7 @@ void Update()
                 Next.SetActive(false);
             }
         }
-    }
-    
+    }  
     void OnTriggerEnter(Collider other)//アイテムの当たり判定
     {
         switch (other.gameObject.name)
@@ -202,28 +188,28 @@ void Update()
     }
     void ShieldControl()//「底」を取った時の処理・10秒間底に壁ができる
     {
-            ShieldTime -= Time.deltaTime;
-            if (ShieldTime > 3.0f)
-            {
-                Shield.GetComponent<Renderer>().material.color = new Color(0.235f, 0.5f, 0.235f, 0);
-            }
-            else if (ShieldTime > 2.0f)
-            {
-                Shield.GetComponent<Renderer>().material.color = new Color(ShieldTime-2, ShieldTime-2, 0, 0);
-            }
+        ShieldTime -= Time.deltaTime;
+        if (ShieldTime > 3.0f)
+        {
+            Shield.GetComponent<Renderer>().material.color = new Color(0.235f, 0.5f, 0.235f, 0);
+        }
+        else if (ShieldTime > 2.0f)
+        {
+            Shield.GetComponent<Renderer>().material.color = new Color(ShieldTime-2, ShieldTime-2, 0, 0);
+        }
         else if (ShieldTime > 1.0f)
         {
             Shield.GetComponent<Renderer>().material.color = new Color(ShieldTime-1, ShieldTime-1, 0, 0);
         }
         else if (ShieldTime > 0)
-            {
-                Shield.GetComponent<Renderer>().material.color = new Color(ShieldTime, 0, 0, 0);
-            }
-            else
-            {
-                Shield.GetComponent<MeshRenderer>().enabled = false;
-                Shield.GetComponent<Collider>().enabled = false;
-            }
+       {
+            Shield.GetComponent<Renderer>().material.color = new Color(ShieldTime, 0, 0, 0);
+        }
+        else
+        {
+            Shield.GetComponent<MeshRenderer>().enabled = false;
+            Shield.GetComponent<Collider>().enabled = false;
+        }
         
     }
     void VanishControl()//「滅」を取った時の処理・ラケットが消滅・５秒後に復活
@@ -250,8 +236,8 @@ void Update()
         
         ShieldTime = 0;
         VanishTime = 0;
-        //Shield.GetComponent<MeshRenderer>().enabled = false;
-      //  Shield.GetComponent<Collider>().enabled = false;
+        Shield.GetComponent<MeshRenderer>().enabled = false;
+        Shield.GetComponent<Collider>().enabled = false;
     }
 
     public void TitleButtonDown()//ゲームオーバー時に出現

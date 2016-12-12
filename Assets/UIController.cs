@@ -25,10 +25,10 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GOText.GetComponent<Text>().text = Param.GameStatus;//ゲームステータス：クリア、ゲームオーバー、nullの３種類
         Score.GetComponent<Text>().text = "" + Param.TotalScore;//得点表示
         Rest.GetComponent<Text>().text = "× " + Param.RacketRest;//ラケットの残り
-        StageText.GetComponent<Text>().text = "STAGE  " + Param.Stage;//ステージ数
-        GOText.GetComponent<Text>().text = Param.GameStatus;//ゲームステータス：クリア、ゲームオーバー、nullの３種類
+        StageText.GetComponent<Text>().text = "STAGE  " + Param.Stage;//ステージ数 
         DebugText.GetComponent<Text>().text = "Ball"+Param.BallRest+" Block"+Param.BlockRest+" "+Param.PlayedTime;
     }
 }
