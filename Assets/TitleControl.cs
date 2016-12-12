@@ -2,13 +2,15 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Parameter;
 
 public class TitleControl : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start ()
+    {
+      
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -18,8 +20,8 @@ public class TitleControl : MonoBehaviour {
     {
         SceneManager.LoadScene("STAGE01");
     }
-    public void ExplanationPushed()
+    public void InstructionPushed()
     {
-        SceneManager.LoadScene("Explanation");
+        SceneManager.LoadScene("Instruction");
     }
 }

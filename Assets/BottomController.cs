@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 using Parameter;
 
@@ -25,11 +24,6 @@ public class BottomController : MonoBehaviour {
             {
                 Param.RacketRest -= 1;
                 Param.Moving = false;
-                /*if (Param.RacketRest <= 0)
-                {
-                    Param.GameOver =true;
-
-                }*/
             }
         }
         if (other.gameObject.tag == "Item")
