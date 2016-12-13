@@ -24,7 +24,7 @@ public class RacketController : MonoBehaviour
     private bool TitlePushed=false;
     private bool NextPushed=false;
     private bool RestartPushed=false;
-
+    private int StageMax = 3;
     // Use this for initialization
     void Start()
     {
@@ -44,9 +44,10 @@ public class RacketController : MonoBehaviour
 
         Param.TotalScore = 0;
         Param.Stage = 1;
-        Param.RacketRest = 3;
+        Param.RacketRest = 2;
         Param.Move = 20;
-        Param.Split = false;        
+        Param.Split = false;
+        Param.RacketWidth = DefaultSize;     
 
         BlockGenerator();
         NextGameStart();
@@ -81,7 +82,9 @@ public class RacketController : MonoBehaviour
         {
             GetComponent<MeshRenderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
-
+                
+                Param.Moving = false;
+            
             RestartWait += Time.deltaTime;
             if (RestartWait > RestartTime)
             {
@@ -91,6 +94,7 @@ public class RacketController : MonoBehaviour
                }
                else
                {
+                    Param.RacketRest -= 1;
                     NextGameStart();
                }
                RestartWait = 0;
@@ -103,7 +107,7 @@ public class RacketController : MonoBehaviour
             Title.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Space)|| TitlePushed)
             {
-                SceneManager.LoadScene("Title");
+                SceneManager.LoadScene("START");
             }
             if (RestartPushed)
             {
@@ -111,7 +115,7 @@ public class RacketController : MonoBehaviour
                 Restart.SetActive(false);
                 Title.SetActive(false);
                 Param.TotalScore = 0;
-                Param.RacketRest = 3;
+                Param.RacketRest = 2;
                 Param.GameStatus = "";
                 Param.PlayedTime = 0;
                 BlockGenerator();
@@ -125,6 +129,10 @@ public class RacketController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space)||NextPushed)
             {
                 Param.Stage += 1;
+                if (Param.Stage > StageMax)
+                {
+                    Param.Stage = 1;
+                }
                 Param.GameStatus = "";
                 Param.PlayedTime = 0;
                 BlockGenerator();
@@ -312,8 +320,48 @@ public class RacketController : MonoBehaviour
                 }
                 break;
             case 3:
-                {
-
+                {              
+                    for (float i = -3; i <= 3; i++)
+                        {
+                            GameObject Brick1 = Instantiate(BrickPrefab) as GameObject;
+                            Brick1.transform.position = new Vector3(i, 2, 0);
+                            Brick1.gameObject.tag = "Brick1";
+                            Param.BlockRest += 1;
+                        }     
+        
+                    for (float j = 2.5f; j <= 3.5f; j++)
+                    {
+                        for (int i = -3; i <= 3; i++)
+                        {
+                            GameObject Brick2 = Instantiate(BrickPrefab) as GameObject;
+                            Brick2.transform.position = new Vector3(i, j, 0);
+                            Brick2.gameObject.tag = "Brick2";
+                            Param.BlockRest += 1;
+                        }
+                    }
+                    for (float j = 2.25f; j <= 3.75f; j += 0.5f)
+                    {
+                        for (float i = -3; i <= 3; i++)
+                        {
+                            GameObject Brick3 = Instantiate(BrickPrefab) as GameObject;
+                            Brick3.transform.position = new Vector3(i, j, 0);
+                            Brick3.gameObject.tag = "Brick3";
+                            Param.BlockRest += 1;
+                        }
+                    }
+                    for (float i = -3; i <= 3; i++)
+                        {
+                            GameObject Brick4 = Instantiate(BrickPrefab) as GameObject;
+                            Brick4.transform.position = new Vector3(i, 4.25f, 0);
+                            Brick4.gameObject.tag = "Brick4";
+                            Param.BlockRest += 1;
+                        }
+                 
+                        for (int i = -3; i <= -1; i++)
+                        {
+                            GameObject HardBlock = Instantiate(HardBlockPrefab) as GameObject;
+                            HardBlock.transform.position = new Vector3(i, 1.75f, 0);
+                        }                 
                 }
                 break;
 

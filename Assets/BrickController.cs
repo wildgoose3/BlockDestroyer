@@ -43,7 +43,7 @@ public class BrickController : MonoBehaviour
             this.BrickHP = 2;
             this.DestroyScore = 150;
         }
-        else
+        else 
         {
             this.BrickHP = 1;
             this.DestroyScore = 50;
@@ -53,45 +53,45 @@ public class BrickController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //長期化したら上からアイテム
+        //長期化したら上からアイテム出現
         if (Param.Moving)
         {
             LongPlayed();
         }
         
-        //「貫」を取った時、ブロックをTriggerに変化
-        /*if (Param.BallStatus == "Pierce" && this.BrickHP <= Param.BallPower)
+        //「貫」を取った時、HPがボールの攻撃力以下のブロックをTriggerに変化
+        if (Param.BallStatus == "Pierce" && this.BrickHP <= Param.BallPower)
         {
             GetComponent<Collider>().isTrigger = true;
         }
         else
         {
             GetComponent<Collider>().isTrigger = false;
-        }*/
-
+        }
         // Updateではブロックの残り耐久力に応じて色を変えます
-        if (this.BrickHP > 4 && this.BrickHP <= 5)
-        {
-            GetComponent<Renderer>().material.color = new Color(1, 0, 0, 0);
-        }
-        else if (this.BrickHP > 3 && this.BrickHP <= 4)
-        {
-            GetComponent<Renderer>().material.color = new Color(1, 0, 1, 0);
-        }
-        else if (this.BrickHP > 2 && this.BrickHP <= 3)
-        {
-            GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0);
-        }
-        else if (this.BrickHP > 1 && this.BrickHP <= 2)
-        {
-            GetComponent<Renderer>().material.color = new Color(0, 1, 1, 0);
-        }
-        else if (this.BrickHP <= 1)
-        {
-            GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
-        }
+            if (this.BrickHP > 4 && this.BrickHP <= 5)
+            {
+                GetComponent<Renderer>().material.color = new Color(1, 0, 0, 0);
+            }
+            else if (this.BrickHP > 3 && this.BrickHP <= 4)
+            {
+                GetComponent<Renderer>().material.color = new Color(1, 0, 1, 0);
+            }
+            else if (this.BrickHP > 2 && this.BrickHP <= 3)
+            {
+                GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0);
+            }
+            else if (this.BrickHP > 1 && this.BrickHP <= 2)
+            {
+                GetComponent<Renderer>().material.color = new Color(0, 1, 1, 0);
+            }
+            else if (this.BrickHP <= 1)
+            {
+                GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
+            }
+         
     }
-    void OnCollisionEnter(Collision other)
+    void OnCollisionEnter(Collision other)//ボールが貫通以外の時の処理
     {
         if (other.gameObject.tag == "Ball")
         {
@@ -101,14 +101,14 @@ public class BrickController : MonoBehaviour
             BlockDestroyed();
         }
     }
-
-    void OntriggerEnter(Collider other)//「貫」を取った時の処理（現状はボールがすり抜けるだけ）
+    //ボールが貫通状態の時の処理
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Ball")
         {
-            Param.TotalScore += 50;//ブロックが残ったか壊れたかにかかわらず当たった時に50点加算
-            this.BrickHP -= Param.BallPower;//ブロックの耐久力を１回分減少
-            this.GetComponent<ParticleSystem>().Play();//パーティクルを再生
+            Param.TotalScore += 50;
+            this.BrickHP -= Param.BallPower;
+            this.GetComponent<ParticleSystem>().Play();
             BlockDestroyed();
         }
     }
@@ -125,7 +125,8 @@ public class BrickController : MonoBehaviour
 
             //ブロック破壊時にアイテム生成
             ItemAppear();
-            Param.BlockRest -= 1;//ブロックの残り個数を減少
+            //ブロックの残り個数を減少
+            Param.BlockRest -= 1;
             if (Param.BlockRest <= 0)
             {
                 Param.GameStatus = "CLEAR!!";
@@ -138,11 +139,12 @@ public class BrickController : MonoBehaviour
     //ブロック破壊時にアイテム生成
     void ItemAppear()
     {
-        switch (Param.Stage)//ステージごとに出現率などを変更
+        //ステージごとに出現率などを変更
+        switch (Param.Stage)
         {
             case 1:
                 {
-                    int num = Random.Range(0, 10);
+                    int num = Random.Range(0, 12);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -183,16 +185,16 @@ public class BrickController : MonoBehaviour
                         GameObject Huge = Instantiate(HugePrefab) as GameObject;
                         Huge.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    /*if (num == 9)
+                    if (num == 9)
                     {
                         GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
                         Pierce.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-                    }*/
+                    }
                 }
                 break;
             case 2:
                 {
-                    int num = Random.Range(0, 10);
+                    int num = Random.Range(0, 12);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -228,17 +230,16 @@ public class BrickController : MonoBehaviour
                         GameObject Shield = Instantiate(ShieldPrefab) as GameObject;
                         Shield.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    else if (num == 7)
+                    else if (num == 9)
                     {
-                        GameObject Normal = Instantiate(NormalPrefab) as GameObject;
-                        Normal.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                        GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
+                        Pierce.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-
                 }
                 break;
             case 3:
                 {
-                    int num = Random.Range(0, 10);
+                    int num = Random.Range(0, 12);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -279,18 +280,23 @@ public class BrickController : MonoBehaviour
                         GameObject Normal = Instantiate(NormalPrefab) as GameObject;
                         Normal.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-
+                    else if (num == 9)
+                    {
+                        GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
+                        Pierce.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                    }
                 }
                 break;
         }
     }
-    void LongPlayed()//長期化した時にランダムでアイテムを生成
+    //長期化した時ブロックが少なくなったらランダムでアイテムを生成
+    void LongPlayed()
     {
         switch (Param.Stage)
         {
             case 1:
                 {
-                    if (Param.PlayedTime > 120)
+                    if (Param.BlockRest<5)
                     {
                         int num = Random.Range(0, 10000);
                         if (num <= 1)
@@ -303,7 +309,7 @@ public class BrickController : MonoBehaviour
                 break;
             case 2:
                 {
-                    if (Param.PlayedTime > 120)
+                    if (Param.BlockRest < 5)
                     {
                         int num = Random.Range(0, 10000);
                         if (num == 0)
@@ -321,7 +327,7 @@ public class BrickController : MonoBehaviour
                 break;
             case 3:
                 {
-                    if (Param.PlayedTime > 120)
+                    if (Param.BlockRest < 5)
                     {
                         int num = Random.Range(0, 10000);
                         if (num == 0)

@@ -21,6 +21,7 @@ namespace Parameter
         public static float BallPower;
         public static string BallStatus;
         public static float PlayedTime;
+        public static float RacketWidth;
     }
 }
 

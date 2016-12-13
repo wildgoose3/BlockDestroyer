@@ -20,11 +20,6 @@ public class BottomController : MonoBehaviour {
         {
             Param.BallRest -= 1;
             Destroy(other.gameObject);
-            if (Param.BallRest <= 0)
-            {
-                Param.RacketRest -= 1;
-                Param.Moving = false;
-            }
         }
         if (other.gameObject.tag == "Item")
         {
