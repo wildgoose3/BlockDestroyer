@@ -18,10 +18,16 @@ public class BrickController : MonoBehaviour
     public GameObject PiercePrefab;//アイテム「貫」
     public GameObject HugePrefab;//アイテム「巨」
     public GameObject SoftPrefab;//アイテム「軟」
-
+    private AudioSource Remained;
+    private AudioSource Destroyed;
+    private AudioSource StageClear;
     // Use this for initialization
     void Start()
     {
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        Remained = audioSources[0];
+        Destroyed = audioSources[1];
+        StageClear = audioSources[2];
         //ブロックの耐久力と得点を設定
         if (this.gameObject.tag == "Brick5")
         {
@@ -97,6 +103,14 @@ public class BrickController : MonoBehaviour
         {
             Param.TotalScore += 50;//ブロックが残ったか壊れたかにかかわらず当たった時に50点加算
             this.BrickHP -= Param.BallPower;//ブロックの耐久力を１回分減少
+            if (this.BrickHP <= 0)
+            {
+                Destroyed.PlayOneShot(Destroyed.clip);
+            }
+            else
+            {
+                Remained.PlayOneShot(Remained.clip);
+            }
             this.GetComponent<ParticleSystem>().Play();//パーティクルを再生
             BlockDestroyed();
         }
@@ -108,6 +122,7 @@ public class BrickController : MonoBehaviour
         {
             Param.TotalScore += 50;
             this.BrickHP -= Param.BallPower;
+            Destroyed.PlayOneShot(Destroyed.clip);
             this.GetComponent<ParticleSystem>().Play();
             BlockDestroyed();
         }
@@ -129,6 +144,7 @@ public class BrickController : MonoBehaviour
             Param.BlockRest -= 1;
             if (Param.BlockRest <= 0)
             {
+                StageClear.PlayOneShot(StageClear.clip);
                 Param.GameStatus = "CLEAR!!";
             }
             //１秒後にオブジェクト破棄
@@ -144,7 +160,7 @@ public class BrickController : MonoBehaviour
         {
             case 1:
                 {
-                    int num = Random.Range(0, 12);
+                    int num = Random.Range(0, 20);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -170,6 +186,11 @@ public class BrickController : MonoBehaviour
                         GameObject Racket1Up = Instantiate(Racket1UpPrefab) as GameObject;
                         Racket1Up.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
+                    /*else if (num == 5 && this.gameObject.tag == "Brick3")
+                    {
+                        GameObject Vanish = Instantiate(VanishPrefab) as GameObject;
+                        Vanish.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                    }*/
                     else if (num == 6)
                     {
                         GameObject Shield = Instantiate(ShieldPrefab) as GameObject;
@@ -194,7 +215,7 @@ public class BrickController : MonoBehaviour
                 break;
             case 2:
                 {
-                    int num = Random.Range(0, 12);
+                    int num = Random.Range(0, 20);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -230,7 +251,17 @@ public class BrickController : MonoBehaviour
                         GameObject Shield = Instantiate(ShieldPrefab) as GameObject;
                         Shield.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    else if (num == 9)
+                    /*else if (num == 7)
+                    {
+                        GameObject Normal = Instantiate(NormalPrefab) as GameObject;
+                        Normal.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                     }
+                    else if (num == 8)
+                    {
+                        GameObject Huge = Instantiate(HugePrefab) as GameObject;
+                        Huge.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                    }*/
+                        else if (num == 9)
                     {
                         GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
                         Pierce.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -239,7 +270,7 @@ public class BrickController : MonoBehaviour
                 break;
             case 3:
                 {
-                    int num = Random.Range(0, 12);
+                    int num = Random.Range(0, 20);
                     if (num == 0)
                     {
                         GameObject Shrink = Instantiate(ShrinkPrefab) as GameObject;
@@ -260,7 +291,7 @@ public class BrickController : MonoBehaviour
                         GameObject Soft = Instantiate(SoftPrefab) as GameObject;
                         Soft.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    else if (num == 4 && this.gameObject.tag == "Brick2")
+                    else if (num == 4 && this.gameObject.tag == "Brick5")
                     {
                         GameObject Racket1Up = Instantiate(Racket1UpPrefab) as GameObject;
                         Racket1Up.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -279,6 +310,11 @@ public class BrickController : MonoBehaviour
                     {
                         GameObject Normal = Instantiate(NormalPrefab) as GameObject;
                         Normal.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+                    }
+                    else if (num == 8)
+                    {
+                        GameObject Huge = Instantiate(HugePrefab) as GameObject;
+                        Huge.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
                     else if (num == 9)
                     {
@@ -337,8 +373,8 @@ public class BrickController : MonoBehaviour
                         }
                         if (num == 1)
                         {
-                            GameObject Normal = Instantiate(NormalPrefab) as GameObject;
-                            Normal.transform.position = new Vector3(Random.Range(-3, 3), 5, 0);
+                            GameObject Huge = Instantiate(HugePrefab) as GameObject;
+                            Huge.transform.position = new Vector3(Random.Range(-3, 3), 5, 0);
                         }
                     }
                 }

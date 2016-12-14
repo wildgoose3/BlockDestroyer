@@ -20,12 +20,15 @@ public class BallController : MonoBehaviour
     private float VecAdj2;
     private AudioSource SoundWall;
     private AudioSource SoundShoot;
+    private AudioSource SoundSoft;
+
     // Use this for initialization
     void Start()
     {
         AudioSource[] audioSources= GetComponents<AudioSource>();
         SoundWall = audioSources[0];
         SoundShoot = audioSources[1];
+        SoundSoft = audioSources[2];
     }
 
     // Update is called once per frame
@@ -63,7 +66,8 @@ public class BallController : MonoBehaviour
                 while (Param.BallRest < 3)
                 {
                     GameObject Ball = Instantiate(BallPrefab) as GameObject;
-                    this.RB.AddForce(1, 1, 0);
+                    Rigidbody BallRB = Ball.GetComponent<Rigidbody>();
+                    BallRB.AddForce(1, 1, 0);
                     Param.BallRest += 1;
                 }
             Param.Split = false;
@@ -117,7 +121,15 @@ public class BallController : MonoBehaviour
         //壁に当たった時
         if (other.gameObject.tag == "Wall"|| other.gameObject.tag == "Player")
         {
-            SoundWall.PlayOneShot(SoundWall.clip);
+            switch (Param.BallStatus)
+            {
+                case "Soft":
+                    SoundSoft.PlayOneShot(SoundSoft.clip);
+                    break;
+                default:
+                    SoundWall.PlayOneShot(SoundWall.clip);
+                    break;
+            }
         }
     }
     //ゲーム開始時の処理・ボールを動かす前はラケットに追従
@@ -131,9 +143,10 @@ public class BallController : MonoBehaviour
             Param.Moving = true;
         }
         //上方向にフリックでスタート
-        else if (Param.FlickY > 30)
+        else if (Param.FlickY > 60)
         {
             this.RB.AddForce(Param.FlickX / 10, Param.FlickY / 10, 0);
+            SoundShoot.PlayOneShot(SoundShoot.clip);
             Param.Moving = true;
         }
         this.transform.Translate(Param.Move / 100, 0, 0, Space.World);

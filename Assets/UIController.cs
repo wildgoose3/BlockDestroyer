@@ -9,8 +9,8 @@ public class UIController : MonoBehaviour
     private GameObject GOText;
     private GameObject Score;
     private GameObject Rest;
-    private GameObject DebugText;
     private GameObject StageText;
+    private GameObject DebugText;
 
     // Use this for initialization
     void Start ()
@@ -29,6 +29,6 @@ public class UIController : MonoBehaviour
         Score.GetComponent<Text>().text = "" + Param.TotalScore;//得点表示
         Rest.GetComponent<Text>().text = "× " + Param.RacketRest;//ラケットの残り
         StageText.GetComponent<Text>().text = "STAGE  " + Param.Stage;//ステージ数 
-        DebugText.GetComponent<Text>().text = "Ball"+Param.BallRest+" Block"+Param.BlockRest+" "+Param.PlayedTime;
+        DebugText.GetComponent<Text>().text =" Block"+Param.BlockRest+ " " + Param.GameStatus+" " + Param.ShieldTime +" "+ Param.PlayedTime+'\n'+Param.FlickX+","+Param.FlickY+Param.Moving+Param.BallStatus;
     }
 }

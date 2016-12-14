@@ -10,9 +10,13 @@ public class SPInput : MonoBehaviour {
     private Vector2 EndPos;
 
 	// Use this for initialization
-	void Start () {
-	
-	}
+	void Start ()
+    {
+        StartPos =new Vector2(0,0);
+        EndPos = new Vector2(0,0);
+        Param.FlickX = 0;
+        Param.FlickY = 0;
+    }
 	
 	// Update is called once per frame
 	void Update () {

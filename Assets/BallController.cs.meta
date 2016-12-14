@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: 14ac06d819653c14691d130b464b89c7
-timeCreated: 1480900632
+timeCreated: 1481676382
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BallPrefab: {instanceID: 0}
+  - DefaultBallColor: {instanceID: 0}
+  - Kamifusen: {instanceID: 0}
+  - Pierce: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
