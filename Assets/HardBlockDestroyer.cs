@@ -12,7 +12,7 @@ public class HardBlockDestroyer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Param.GameStatus == "CLEAR!!")
+        if (Param.GameStatus == "CLEAR!!"|| Param.GameStatus == "GAME OVER")
         {
             Destroy(this.gameObject);
         }

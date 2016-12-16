@@ -59,22 +59,37 @@ public class BrickController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //長期化したら上からアイテム出現
-        if (Param.Moving)
+        if (Param.ExpPageNow != 0||Param.GameStatus=="GAME OVER")
         {
-            LongPlayed();
+            Destroy(this.gameObject);
         }
-        
-        //「貫」を取った時、HPがボールの攻撃力以下のブロックをTriggerに変化
-        if (Param.BallStatus == "Pierce" && this.BrickHP <= Param.BallPower)
+        else if (Param.ExpPageNow == 0)
         {
-            GetComponent<Collider>().isTrigger = true;
-        }
-        else
-        {
-            GetComponent<Collider>().isTrigger = false;
-        }
-        // Updateではブロックの残り耐久力に応じて色を変えます
+            //長期化したら上からアイテム出現
+            if (Param.Moving)
+            {
+                LongPlayed();
+            }
+            if (Param.BlockRest <= 0)
+            {
+                if (Param.ClearPlayed == false)
+                {
+                    StageClear.PlayOneShot(StageClear.clip);
+                    Param.ClearPlayed = true;
+                }
+                Param.GameStatus = "CLEAR!!";
+                Destroy(this.gameObject, 0.7f);
+            }
+            //「貫」を取った時、HPがボールの攻撃力以下のブロックをTriggerに変化
+            if (Param.BallStatus == "Pierce" && this.BrickHP <= Param.BallPower)
+            {
+                GetComponent<Collider>().isTrigger = true;
+            }
+            else
+            {
+                GetComponent<Collider>().isTrigger = false;
+            }
+            // Updateではブロックの残り耐久力に応じて色を変えます
             if (this.BrickHP > 4 && this.BrickHP <= 5)
             {
                 GetComponent<Renderer>().material.color = new Color(1, 0, 0, 0);
@@ -95,7 +110,7 @@ public class BrickController : MonoBehaviour
             {
                 GetComponent<Renderer>().material.color = new Color(1, 1, 1, 0);
             }
-         
+        }
     }
     void OnCollisionEnter(Collision other)//ボールが貫通以外の時の処理
     {
@@ -141,14 +156,7 @@ public class BrickController : MonoBehaviour
             //ブロック破壊時にアイテム生成
             ItemAppear();
             //ブロックの残り個数を減少
-            Param.BlockRest -= 1;
-            if (Param.BlockRest <= 0)
-            {
-                StageClear.PlayOneShot(StageClear.clip);
-                Param.GameStatus = "CLEAR!!";
-            }
-            //１秒後にオブジェクト破棄
-            Destroy(this.gameObject, 1.0f);
+            Param.BlockRest -= 1;       
         }
     }
 

@@ -5,7 +5,6 @@ using Parameter;
 
 public class BallController : MonoBehaviour
 {
-
     private Rigidbody RB;
     public GameObject BallPrefab;
     public Material DefaultBallColor;
@@ -15,9 +14,11 @@ public class BallController : MonoBehaviour
     private float DefaultBallSize = 0.5f;
     private float DefaultBallPower = 1;
     private float SpeedMin = 5;
-    private float SpeedMax = 30;
+    private float SpeedMax = 15;
     private float VecAdj = 0.9f;
     private float VecAdj2;
+    private float dump=0.99f;
+    private float Accel = 1.05f;
     private AudioSource SoundWall;
     private AudioSource SoundShoot;
     private AudioSource SoundSoft;
@@ -118,19 +119,32 @@ public class BallController : MonoBehaviour
     //効果音再生
     void OnCollisionEnter(Collision other)
     {
-        //壁に当たった時
-        if (other.gameObject.tag == "Wall"|| other.gameObject.tag == "Player")
+        if (Param.Moving)
         {
-            switch (Param.BallStatus)
+            //（音再生）
+            if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Player")
             {
-                case "Soft":
-                    SoundSoft.PlayOneShot(SoundSoft.clip);
-                    break;
-                default:
-                    SoundWall.PlayOneShot(SoundWall.clip);
-                    break;
+                switch (Param.BallStatus)
+                {
+                    case "Soft":
+                        SoundSoft.PlayOneShot(SoundSoft.clip);
+                        break;
+                    default:
+                        SoundWall.PlayOneShot(SoundWall.clip);
+                        break;
+                }
             }
-        }
+            //ラケットに当たった時（少し加速）
+            if (other.gameObject.tag == "Player")
+            {
+                this.RB.velocity = RB.velocity * Accel;
+            }
+            //壁に当たった時（少し減速）
+            if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Brick1" || other.gameObject.tag == "Brick2" || other.gameObject.tag == "Brick3" || other.gameObject.tag == "Brick4" || other.gameObject.tag == "Brick5")
+            {
+                this.RB.velocity = RB.velocity * dump;
+            }
+       }
     }
     //ゲーム開始時の処理・ボールを動かす前はラケットに追従
     void BallRelease()
@@ -143,9 +157,9 @@ public class BallController : MonoBehaviour
             Param.Moving = true;
         }
         //上方向にフリックでスタート
-        else if (Param.FlickY > 60)
+        else if (Param.FlickY > 50)
         {
-            this.RB.AddForce(Param.FlickX / 10, Param.FlickY / 10, 0);
+            this.RB.AddForce(Param.FlickX / 20, Param.FlickY / 20, 0);
             SoundShoot.PlayOneShot(SoundShoot.clip);
             Param.Moving = true;
         }

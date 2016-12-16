@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using Parameter;
 public class InstructionControl : MonoBehaviour
 {
-    private int ExpPageNow;
     private GameObject NextPage;
     private GameObject PrevPage;
     private GameObject Subject;
@@ -14,6 +14,7 @@ public class InstructionControl : MonoBehaviour
     private string Main;
     private AudioSource PageChange;
     private AudioSource GotoTitle;
+    private AudioSource GameStart;
     private GameObject TitleText;
     private GameObject StartButton;
     private GameObject Instruction;
@@ -21,7 +22,7 @@ public class InstructionControl : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        ExpPageNow = 1;
+        Param.ExpPageNow = 1;
         TitleText = GameObject.Find("TitleText");
         StartButton = GameObject.Find("Start");
         Instruction = GameObject.Find("Instruction");
@@ -33,15 +34,25 @@ public class InstructionControl : MonoBehaviour
         AudioSource[] audioSources = GetComponents<AudioSource>();
         PageChange = audioSources[0];
         GotoTitle = audioSources[1];
+        GameStart = audioSources[2];
+        Param.StartPushed = false;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+                return;
+            }
+        }
         TextChange();
         Subject.GetComponent<Text>().text = Sub;
         MainText.GetComponent<Text>().text = Main;
-        switch (ExpPageNow)
+        switch (Param.ExpPageNow)
         {
             case 1:
                 TitleText.SetActive(true);
@@ -73,6 +84,16 @@ public class InstructionControl : MonoBehaviour
                 Subject.SetActive(true);
                 MainText.SetActive(true);
                 break;
+            case 0:
+                TitleText.SetActive(false);
+                StartButton.SetActive(false);
+                Instruction.SetActive(false);
+                PrevPage.SetActive(false);
+                NextPage.SetActive(false);
+                TitleButton.SetActive(false);
+                Subject.SetActive(false);
+                MainText.SetActive(false);
+                break;
             default:
                 TitleText.SetActive(false);
                 StartButton.SetActive(false);
@@ -87,34 +108,49 @@ public class InstructionControl : MonoBehaviour
     }
     public void GameStartPushed()
     {
+        Param.TotalScore = 0;
+        Param.Stage = 1;
+        Param.RacketRest = 2;
+        Param.Move = 20;
+        Param.Split = false;
+        Param.RacketWidth = 2;
+        Param.BlockRest = 0;
+        Param.BallRest = 0;
+        Param.ExpPageNow=0;
+        Param.PlayedTime = 0;
+        GameStart.PlayOneShot(GameStart.clip);
+        Param.StartPushed = true;
+    }
+    public void ResetPushed()
+    {
         SceneManager.LoadScene("STAGE01");
     }
     public void InstructionPushed()
     {
         GotoTitle.PlayOneShot(GotoTitle.clip);
-        ExpPageNow = 2;
+        Param.ExpPageNow = 2;
     }
     public void PrevPushed()
     {
-        ExpPageNow -= 1;
+        Param.ExpPageNow -= 1;
         PageChange.PlayOneShot(PageChange.clip);
     }
 
     public void NextPushed()
     {
-        ExpPageNow += 1;
+        Param.ExpPageNow += 1;
         PageChange.PlayOneShot(PageChange.clip);
     }
 
     public void TitlePushed()
     {
         GotoTitle.PlayOneShot(GotoTitle.clip);
-        ExpPageNow = 1;
+        Param.ExpPageNow = 1;
     }
 
     void TextChange()
     {
-        switch (ExpPageNow)
+        switch (Param.ExpPageNow)
         {
             case 2:
                 Sub = "ゲーム説明";
@@ -122,7 +158,7 @@ public class InstructionControl : MonoBehaviour
                 break;
             case 3:
                 Sub = "操作説明";
-                Main = "左右にスワイプ：ラケットを移動" + '\n' + '\n' + "上にフリック：ボールを発射" + '\n'+ "※ボールが動いている間は上にフリックしてもボールは動きません";
+                Main = "左右にスワイプ：ラケットを移動" + '\n' + '\n' + "上にフリック：ボールを発射" + '\n'+ "※ボールが動いている間は上にフリックしてもボールは動きません" + '\n' + '\n' +"壁やブロックに当たると少し減速し、ラケットに当たると少し加速します。";
                 break;
             case 4:
                 Sub = "ブロックとアイテム";
@@ -130,11 +166,11 @@ public class InstructionControl : MonoBehaviour
                 break;
             case 5:
                 Sub = "アイテムの詳細";
-                Main = "[拡]：ラケットの幅が広がります。" + '\n' + "最大で通常の2.5倍まで拡大します。" + '\n'+"[縮]:ラケットの幅が縮みます。" + '\n' + "最大で通常の半分まで縮小します。" + '\n'+"[底]：10秒間、ラケットの下に壁ができます。"+'\n'+"[滅]：ラケットが消えてしまいます。" + '\n' + "ただし5秒後にボールが残っていれば復活します。" + '\n' + "[増]：ラケットの残数が1つ増えます。";
+                Main = "[拡]：ラケットの幅が広がります。" + '\n' + "最大で通常の2.5倍まで拡大します。" + '\n'+ '\n' + "[縮]:ラケットの幅が縮みます。" + '\n' + "最大で通常の半分まで縮小します。" + '\n'+ '\n' + "[底]：10秒間、ラケットの下に壁ができます。" +'\n'+ '\n' + "[滅]：ラケットが消えてしまいます。" + '\n' + "ただし5秒後にボールが残っていれば復活します。" + '\n' + '\n' + "[増]：ラケットの残数が1つ増えます。";
                 break;
             case 6:
                 Sub = "アイテムの詳細";
-                Main = "(裂)：ボールが３つに増えます。それより多くはなりません。" + '\n' + "(貫)：ボールの攻撃力が通常の２倍になり、ブロックを壊した場合は貫通して進みます。" + '\n' + "(軟)：ボールの攻撃力が通常の半分になります。" + '\n' + "(巨)：ボールが巨大化します。" + '\n' + "(普)：通常のボールに戻ります。" + '\n'+ '\n' + "※(貫)(軟)(巨)(普)の効果は同時にはつきません。";
+                Main = "(裂)：ボールが３つに増えます。それより多くはなりません。" + '\n' + '\n' + "(貫)：ボールの攻撃力が通常の２倍になり、ブロックを壊した場合は貫通して進みます。" + '\n' + '\n' + "(軟)：ボールの攻撃力が通常の半分になります。" + '\n' + '\n' + "(巨)：ボールが巨大化します。" + '\n' + '\n' + "(普)：通常のボールに戻ります。" + '\n'+ '\n' + "※(貫)(軟)(巨)(普)の効果は同時にはつきません。";
                 break;
         }
     }

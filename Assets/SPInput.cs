@@ -23,6 +23,8 @@ public class SPInput : MonoBehaviour {
         if (Input.touchCount != 0)
         {
             touch = Input.touches[0];
+            Param.FlickX = 0;
+            Param.FlickY = 0;
         }
         if (touch.phase == TouchPhase.Began)
         {
@@ -31,9 +33,17 @@ public class SPInput : MonoBehaviour {
 
         if (touch.phase == TouchPhase.Moved)
         {
-            if (touch.deltaPosition.x > 1.0f)
+            if (touch.deltaPosition.x > 2.0f)
+            {
+                Param.SPDirection = "right2";
+            }
+            else if (touch.deltaPosition.x > 1.0f)
             {
                 Param.SPDirection = "right";
+            }
+            else if (touch.deltaPosition.x < -2.0f)
+            {
+                Param.SPDirection = "left2";
             }
             else if (touch.deltaPosition.x < -1.0f)
             {

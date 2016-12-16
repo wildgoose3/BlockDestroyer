@@ -21,53 +21,41 @@ public class RacketController : MonoBehaviour
     private GameObject Title;
     private GameObject Next;
     private bool TitlePushed=false;
-    private bool NextPushed=false;
-    private bool RestartPushed=false;
+    private bool NextPushed=false;  
     private int StageMax = 3;
-
     private AudioSource SoudTitle;
-    private AudioSource GameStart;
-  
+    private AudioSource GameStart; 
     private AudioSource GameOver;
     private AudioSource RacketRevive;
     private AudioSource ItemGood;
     private AudioSource ItemBad;
     private AudioSource Item1Up;
     private AudioSource ItemNormal;
-
-   /* private AudioSource ItemExpand;
-    private AudioSource ItemShrink; 
-    private AudioSource ItemShield;
-    private AudioSource ItemVanish;
-    private AudioSource ItemSplit;
-    private AudioSource ItemPierce;
-    private AudioSource ItemSoft;
-    private AudioSource ItemHuge;*/
+    private GameObject RemainedBall;
+    /* private AudioSource ItemExpand;
+     private AudioSource ItemShrink; 
+     private AudioSource ItemShield;
+     private AudioSource ItemVanish;
+     private AudioSource ItemSplit;
+     private AudioSource ItemPierce;
+     private AudioSource ItemSoft;
+     private AudioSource ItemHuge;*/
     
     // Use this for initialization
     void Start()
     {
-        Restart=GameObject.Find("Restart");
+        Param.RestartPushed = false;
+        Restart =GameObject.Find("Restart");
         Title = GameObject.Find("Title");
-        Next = GameObject.Find("Next");
-                
+        Next = GameObject.Find("Next");              
         Restart.SetActive(false);
         Title.SetActive(false);
         Next.SetActive(false);
 
         RB=GetComponent<Rigidbody>();   
 
-        Param.TotalScore = 0;
-        Param.Stage = 1;
-        Param.RacketRest = 2;
-        Param.Move = 20;
-        Param.Split = false;
-        Param.RacketWidth = DefaultSize;     
-
         BlockGenerator();
         NextGameStart();
-
-        Param.PlayedTime=0;
 
         AudioSource[] audioSources = GetComponents<AudioSource>();
         SoudTitle = audioSources[0];
@@ -78,103 +66,138 @@ public class RacketController : MonoBehaviour
         ItemBad = audioSources[5];
         Item1Up = audioSources[6];
         ItemNormal = audioSources[7];
-        GameStart.PlayOneShot(GameStart.clip);
+        Param.ClearPlayed = false;
+        Param.GameOverPlayed = false;
     }
 
 // Update is called once per frame
 void Update()
     {
-        VanishControl();
-        if (Param.Moving)
+        if (Param.ExpPageNow != 0)
         {
-            Param.PlayedTime += Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) || Param.SPDirection == "left")
-        {
-            Param.Move = -15;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow) || Param.SPDirection == "right")
-        {
-            Param.Move = 15;
-        }
-        else
-        {
-            Param.Move = 0;
-        }
-        this.RB.velocity = new Vector3(0, 0, 0);
-        this.transform.Translate(Param.Move / 100, 0, 0, Space.World);
-        if (Param.BallRest <= 0)
-        {
-            GetComponent<MeshRenderer>().enabled = false;
-            GetComponent<Collider>().enabled = true;               
-            Param.Moving = false;
-            
-            RestartWait += Time.deltaTime;
-            if (RestartWait > RestartTime)
+            GameObject Ball = GameObject.Find("BallPrefab(Clone)");
+            if (Ball != null)
             {
-               if (Param.RacketRest <= 0)
-               {
-                Param.GameStatus = "GAME OVER";
-               }
-               else
-               {
-                    Param.RacketRest -= 1;
-                    NextGameStart();
-               }
-               RestartWait = 0;
-             }
+                Destroy(Ball.gameObject);
+            }
         }
-        if (Param.GameStatus == "GAME OVER")
+        if (Param.ExpPageNow == 0)
         {
-            bool SoundPlayed = false;
-            if (SoundPlayed == false)
+            if (Param.StartPushed == true)
             {
-                GameOver.PlayOneShot(GameOver.clip);
-                SoundPlayed = true;
+                BlockGenerator();
+                NextGameStart();
+                Param.StartPushed = false;
+            }
+         
+            if (Param.Moving)
+            {
+                Param.PlayedTime += Time.deltaTime;
+                VanishControl();
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) || Param.SPDirection == "left")
+            {
+                Param.Move = -15;
+            }
+            else if (Param.SPDirection == "left2")
+            {
+                Param.Move = -30;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Param.SPDirection == "right")
+            {
+                Param.Move = 15;
+            }
+            else if (Param.SPDirection == "right2")
+            {
+                Param.Move = 30;
+            }
+            else
+            {
+                Param.Move = 0;
             }
             this.RB.velocity = new Vector3(0, 0, 0);
-            Restart.SetActive(true);
-            Title.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.Space)|| TitlePushed)
+            this.transform.Translate(Param.Move / 100, 0, 0, Space.World);
+            if (Param.BallRest <= 0)
             {
-                SoudTitle.PlayOneShot(SoudTitle.clip);
-                SceneManager.LoadScene("START");
-                SoundPlayed = false;
-            }
-            if (RestartPushed)
-            {
-                GameStart.PlayOneShot(GameStart.clip);
-                RestartPushed = false;
-                Restart.SetActive(false);
-                Title.SetActive(false);
-                Param.TotalScore = 0;
-                Param.RacketRest = 2;
-                Param.GameStatus = "";
-                Param.PlayedTime = 0;
-                BlockGenerator();
-                NextGameStart();
-                SoundPlayed = false;
-            }
-        }
-        else if (Param.GameStatus == "CLEAR!!")
-        {
-            Next.SetActive(true);
-            Param.ShieldTime = 0;
-            if (Input.GetKeyDown(KeyCode.Space)||NextPushed)
-            {
-                Param.Stage += 1;
-                if (Param.Stage > StageMax)
+                GetComponent<MeshRenderer>().enabled = false;
+                GetComponent<Collider>().enabled = true;
+                Param.Moving = false;
+
+                RestartWait += Time.deltaTime;
+                if (RestartWait > RestartTime)
                 {
-                    Param.Stage = 1;
+                    if (Param.RacketRest <= 0)
+                    {
+                        Param.GameStatus = "GAME OVER";
+                    }
+                    else
+                    {
+                        Param.RacketRest -= 1;
+                        NextGameStart();
+                    }
+                    RestartWait = 0;
                 }
-                Param.GameStatus = "";
-                Param.PlayedTime = 0;
-                BlockGenerator();
-                NextGameStart();
-                NextPushed = false;
-                Next.SetActive(false);
-                GameStart.PlayOneShot(GameStart.clip);
-             }
+            }
+            if (Param.GameStatus == "GAME OVER")
+            {
+                if (Param.GameOverPlayed == false)
+                {
+                    GameOver.PlayOneShot(GameOver.clip);
+                    Param.GameOverPlayed = true;
+                }
+                this.RB.velocity = new Vector3(0, 0, 0);
+                Restart.SetActive(true);
+                Title.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.Space) || TitlePushed)
+                {
+                    Param.BallRest = 0;
+                    Param.BlockRest = 0;
+                    Param.Stage = 1;
+                    Param.TotalScore = 0;
+                    Param.ExpPageNow = 1;
+                    Restart.SetActive(false);
+                    Title.SetActive(false);
+                    Next.SetActive(false);
+                    Param.GameOverPlayed = false;
+                    Param.GameStatus = "";
+                }
+                if (Param.RestartPushed)
+                {
+                    GameStart.PlayOneShot(GameStart.clip);
+                    Param.RestartPushed = false;
+                    Next.SetActive(false);
+                    Restart.SetActive(false);
+                    Title.SetActive(false);
+                    Param.TotalScore = 0;
+                    Param.RacketRest = 2;
+                    Param.GameStatus = "";
+                    Param.PlayedTime = 0;
+                    BlockGenerator();
+                    NextGameStart();
+                    Param.GameOverPlayed = false;
+                }
+            }
+            else if (Param.GameStatus == "CLEAR!!")
+            {
+                Next.SetActive(true);
+                Param.ShieldTime = 0;
+                if (Input.GetKeyDown(KeyCode.Space) || NextPushed)
+                {
+                    Param.Stage += 1;
+                    if (Param.Stage > StageMax)
+                    {
+                        Param.Stage = 1;
+                    }
+                    Param.GameStatus = "";
+                    Param.PlayedTime = 0;
+                    BlockGenerator();
+                    NextGameStart();
+                    NextPushed = false;
+                    Next.SetActive(false);
+                    GameStart.PlayOneShot(GameStart.clip);
+                    Param.ClearPlayed = false;
+                }
+            }
         }
     }  
     void OnTriggerEnter(Collider other)//アイテムの当たり判定
@@ -266,21 +289,23 @@ void Update()
         VanishTime = 0;
     }
 
-    public void TitleButtonDown()//ゲームオーバー時に出現
+    public void TitleButtonUp()//ゲームオーバー時に出現
     {
         TitlePushed = true;
     }
-    public void NextButtonDown()//ステージクリア時に出現
+    public void NextButtonUp()//ステージクリア時に出現
     {
         NextPushed = true;
     }
-    public void RestartButtonDown()//ゲームオーバー時に出現
+    public void RestartButtonUp()//ゲームオーバー時に出現
     {
-        RestartPushed = true;
+        Param.RestartPushed = true;
     }
     void BlockGenerator()//ステージ開始時のブロック生成
     {
-            switch (Param.Stage)
+        Param.BlockRest = 0;
+        Param.RestartPushed = false;
+        switch (Param.Stage)
         {
             case 1:
                 for (float j = 2; j <= 3.5; j += 0.5f)
@@ -342,7 +367,7 @@ void Update()
                     for (float i = -3; i <= 1; i++)
                     {
                         GameObject Brick4 = Instantiate(BrickPrefab) as GameObject;
-                        Brick4.transform.position = new Vector3(i, -2, 0);
+                        Brick4.transform.position = new Vector3(i, -1.25f, 0);
                         Brick4.gameObject.tag = "Brick4";
                         Param.BlockRest += 1;
                     }
@@ -350,14 +375,14 @@ void Update()
                     for (int i = -1; i <= 3; i++)
                     {
                         GameObject Brick1 = Instantiate(BrickPrefab) as GameObject;
-                        Brick1.transform.position = new Vector3(i, -1, 0);
+                        Brick1.transform.position = new Vector3(i, -0.25f, 0);
                         Brick1.gameObject.tag = "Brick1";
                         Param.BlockRest += 1;
                     }
                     for (int i = -3; i <= 1; i++)
                     {
                         GameObject Brick3 = Instantiate(BrickPrefab) as GameObject;
-                        Brick3.transform.position = new Vector3(i, 0, 0);
+                        Brick3.transform.position = new Vector3(i, 0.75f, 0);
                         Brick3.gameObject.tag = "Brick3";
                         Param.BlockRest += 1;
                     }
@@ -365,7 +390,7 @@ void Update()
                     for (int i = -1; i <= 3; i++)
                     {
                         GameObject Brick2 = Instantiate(BrickPrefab) as GameObject;
-                        Brick2.transform.position = new Vector3(i, -1, 0);
+                        Brick2.transform.position = new Vector3(i, 1.75f, 0);
                         Brick2.gameObject.tag = "Brick2";
                         Param.BlockRest += 1;
                     }
@@ -373,21 +398,21 @@ void Update()
                     for (int i = -3; i <= 1; i++)
                     {
                         GameObject Brick5 = Instantiate(BrickPrefab) as GameObject;
-                        Brick5.transform.position = new Vector3(i, 2, 0);
+                        Brick5.transform.position = new Vector3(i, 2.75f, 0);
                         Brick5.gameObject.tag = "Brick5";
                         Param.BlockRest += 1;
                     }
                     for (int i = -1; i <= 3; i++)
                     {
                         GameObject Brick1 = Instantiate(BrickPrefab) as GameObject;
-                        Brick1.transform.position = new Vector3(i, 3, 0);
+                        Brick1.transform.position = new Vector3(i, 3.75f, 0);
                         Brick1.gameObject.tag = "Brick1";
                         Param.BlockRest += 1;
                     }
                     for (int i = -3; i <= 1; i++)
                     {
                         GameObject Brick3 = Instantiate(BrickPrefab) as GameObject;
-                        Brick3.transform.position = new Vector3(i, 4, 0);
+                        Brick3.transform.position = new Vector3(i, 4.75f, 0);
                         Brick3.gameObject.tag = "Brick3";
                         Param.BlockRest += 1;
                     }

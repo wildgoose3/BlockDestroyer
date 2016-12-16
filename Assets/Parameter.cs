@@ -23,6 +23,11 @@ namespace Parameter
         public static float PlayedTime;
         public static float RacketWidth;
         public static float ShieldTime;
+        public static int ExpPageNow;
+        public static bool StartPushed;
+        public static bool ClearPlayed;
+        public static bool GameOverPlayed;
+        public static bool RestartPushed;
     }
 }
 
