@@ -17,8 +17,6 @@ public class BallController : MonoBehaviour
     private float SpeedMax = 15;
     private float VecAdj = 0.9f;
     private float VecAdj2;
-    private float dump=0.99f;
-    private float Accel = 1.05f;
     private AudioSource SoundWall;
     private AudioSource SoundShoot;
     private AudioSource SoundSoft;
@@ -134,16 +132,6 @@ public class BallController : MonoBehaviour
                         break;
                 }
             }
-            //ラケットに当たった時（少し加速）
-            if (other.gameObject.tag == "Player")
-            {
-                this.RB.velocity = RB.velocity * Accel;
-            }
-            //壁に当たった時（少し減速）
-            if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Brick1" || other.gameObject.tag == "Brick2" || other.gameObject.tag == "Brick3" || other.gameObject.tag == "Brick4" || other.gameObject.tag == "Brick5")
-            {
-                this.RB.velocity = RB.velocity * dump;
-            }
        }
     }
     //ゲーム開始時の処理・ボールを動かす前はラケットに追従
@@ -157,9 +145,9 @@ public class BallController : MonoBehaviour
             Param.Moving = true;
         }
         //上方向にフリックでスタート
-        else if (Param.FlickY > 50)
+        else if (Param.FlickY > 400)
         {
-            this.RB.AddForce(Param.FlickX / 20, Param.FlickY / 20, 0);
+            this.RB.AddForce(Param.FlickX / 200, Param.FlickY / 200, 0);
             SoundShoot.PlayOneShot(SoundShoot.clip);
             Param.Moving = true;
         }

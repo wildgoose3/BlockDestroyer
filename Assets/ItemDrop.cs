@@ -13,7 +13,7 @@ public class ItemDrop : MonoBehaviour {
 	void Update () {
         if (Param.Moving)
         {
-            transform.Translate(0, -0.1f, 0, Space.World);
+            transform.Translate(0, -0.05f, 0, Space.World);
         }
         else
         {
