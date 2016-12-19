@@ -19,6 +19,8 @@ public class InstructionControl : MonoBehaviour
     private GameObject StartButton;
     private GameObject Instruction;
     private GameObject TitleButton;
+    private GameObject QuitCanvas;
+
     // Use this for initialization
     void Start ()
     {
@@ -36,6 +38,8 @@ public class InstructionControl : MonoBehaviour
         GotoTitle = audioSources[1];
         GameStart = audioSources[2];
         Param.StartPushed = false;
+        QuitCanvas = GameObject.Find("Quit");
+        QuitCanvas.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -45,8 +49,7 @@ public class InstructionControl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Application.Quit();
-                return;
+                QuitCanvas.SetActive(true);
             }
         }
         TextChange();
@@ -106,6 +109,14 @@ public class InstructionControl : MonoBehaviour
                 break;
         }
     }
+    public void QuitYesPushed()
+    {
+        Application.Quit();
+    }
+    public void QuitNoPushed()
+    {
+        QuitCanvas.SetActive(false);
+    }
     public void GameStartPushed()
     {
         Param.TotalScore = 0;
@@ -147,7 +158,6 @@ public class InstructionControl : MonoBehaviour
         GotoTitle.PlayOneShot(GotoTitle.clip);
         Param.ExpPageNow = 1;
     }
-
     void TextChange()
     {
         switch (Param.ExpPageNow)
@@ -166,11 +176,11 @@ public class InstructionControl : MonoBehaviour
                 break;
             case 5:
                 Sub = "アイテムの詳細";
-                Main = "[拡]：ラケットの幅が広がります。" + '\n' + "[縮]:ラケットの幅が縮みます。" + '\n' + "ラケットの大きさ：最小：１～通常：２～最大：５" + '\n'+ '\n' + "[底]：10秒間、ラケットの下に壁ができます。" +'\n'+ '\n' + "[滅]：ラケットが消えてしまいます。" + '\n' + "ただし5秒後にボールが残っていれば復活します。" + '\n' + '\n' + "[増]：ラケットの残数が1つ増えます。";
+                Main = "[拡]：ラケットの幅が広がります。" + '\n' + "[縮]:ラケットの幅が縮みます。" + '\n' + "最小：１～通常：２～最大：５" + '\n'+ '\n' + "[底]：10秒間、ラケットの下に壁ができます。" +'\n'+ '\n' + "[滅]：ラケットが消えてしまいます。" + '\n' + "ただし5秒後にボールが残っていれば復活します。" + '\n' + '\n' + "[増]：ラケットの残数が1つ増えます。";
                 break;
             case 6:
                 Sub = "アイテムの詳細";
-                Main = "(裂)：ボールが最大３つに増えます。" + '\n' + '\n' + "(貫)：ボールの攻撃力が通常の２倍になり、ブロックを壊した場合は貫通して進みます。" + '\n' + '\n' + "(軟)：ボールの攻撃力が通常の半分になります。" + '\n' + '\n' + "(巨)：ボールが巨大化します。" + '\n' + '\n' + "(普)：通常のボールに戻ります。" + '\n'+ '\n' + "※(貫)(軟)(巨)(普)の効果は同時にはつきません。";
+                Main = "(裂)：ボールが最大３つに増えます。" + '\n' + '\n' + "(貫)：ボールの攻撃力が通常の３倍になり、ブロックを壊した場合は貫通して進みます。" + '\n' + '\n' + "(軟)：ボールの攻撃力が通常の半分になります。" + '\n' + '\n' + "(巨)：ボールが巨大化します。" + '\n' + '\n' + "(普)：通常のボールに戻ります。" + '\n'+ '\n' + "※(貫)(軟)(巨)(普)の効果は同時にはつきません。";
                 break;
         }
     }

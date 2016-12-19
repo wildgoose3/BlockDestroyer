@@ -6,8 +6,8 @@ namespace Parameter
     public static class Param
     {
         public static int RacketRest; //現在残っているラケット
+        public static int BlockRest; //現在残っているブロック
         public static int BallRest; //現在残っているボール
-        public static int BlockRest; //残りブロック
         public static int TotalScore; //得点
         public static float Move;//ラケットの移動速度
         public static bool Moving;//ボールリリース中かどうか

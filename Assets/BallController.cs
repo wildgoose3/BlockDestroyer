@@ -36,10 +36,8 @@ public class BallController : MonoBehaviour
         RB = this.GetComponent<Rigidbody>();
         VecAdj2 = Mathf.Sqrt(1 - VecAdj * VecAdj);
         BallStatusChange();
-        if (Param.BlockRest <= 0)
+        if (Param.GameStatus=="CLEAR!!"|| Param.GameStatus == "GAME OVER")
         {
-            this.RB.velocity = new Vector3(0, 0, 0);
-            this.transform.Translate(0, 0, 0, Space.World);
             Param.Moving = false;
             Destroy(this.gameObject);
         }
@@ -56,8 +54,6 @@ public class BallController : MonoBehaviour
             BallSplit();//分裂処理
         }
     }
-
-
     void BallSplit()//分裂処理
     {
         if (Param.Split)
@@ -72,7 +68,6 @@ public class BallController : MonoBehaviour
             Param.Split = false;
         }
     }
-
     void BallStatusChange()//ボールの状態変更
     {
         switch (Param.BallStatus)
@@ -99,7 +94,7 @@ public class BallController : MonoBehaviour
             case "Pierce":
                 {
                     this.transform.localScale = new Vector3(DefaultBallSize, DefaultBallSize, DefaultBallSize);
-                    Param.BallPower = 2;
+                    Param.BallPower = 3;
                     this.GetComponent<Renderer>().material = Pierce;
                     this.GetComponent<ParticleSystem>().Play();
                 }

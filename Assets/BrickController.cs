@@ -49,7 +49,7 @@ public class BrickController : MonoBehaviour
             this.BrickHP = 2;
             this.DestroyScore = 150;
         }
-        else 
+        else
         {
             this.BrickHP = 1;
             this.DestroyScore = 50;
@@ -59,7 +59,7 @@ public class BrickController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Param.ExpPageNow != 0||Param.GameStatus=="GAME OVER"||Param.GameStatus=="CLEAR!!")
+        if (Param.ExpPageNow != 0 || Param.GameStatus == "GAME OVER" || Param.GameStatus == "CLEAR!!")
         {
             Param.BlockRest = 0;
             Destroy(this.gameObject);
@@ -123,7 +123,7 @@ public class BrickController : MonoBehaviour
         }
     }
     void OnCollisionStay(Collision other)
-    { 
+    {
         if (other.gameObject.tag == "Wall")
         {
             BlockDestroying();
@@ -164,10 +164,6 @@ public class BrickController : MonoBehaviour
     void BlockDestroying()
     {
         Param.BlockRest -= 1;
-        if (Param.BlockRest <= 0)
-        {
-            Param.GameStatus = "CLEAR!!";
-        }
         Destroy(this.gameObject);
     }
 
@@ -280,7 +276,7 @@ public class BrickController : MonoBehaviour
                         GameObject Huge = Instantiate(HugePrefab) as GameObject;
                         Huge.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }*/
-                        else if (num == 9)
+                    else if (num == 9)
                     {
                         GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
                         Pierce.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -355,7 +351,7 @@ public class BrickController : MonoBehaviour
                         GameObject Expand = Instantiate(ExpandPrefab) as GameObject;
                         Expand.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    else if (num == 2|| num == 12)
+                    else if (num == 2 || num == 12)
                     {
                         GameObject Split = Instantiate(SplitPrefab) as GameObject;
                         Split.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -385,11 +381,11 @@ public class BrickController : MonoBehaviour
                         GameObject Normal = Instantiate(NormalPrefab) as GameObject;
                         Normal.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
                     }
-                    /*else if (num == 8)
+                    else if (num == 8)
                     {
                         GameObject Huge = Instantiate(HugePrefab) as GameObject;
                         Huge.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-                    }*/
+                    }
                     else if (num == 9)
                     {
                         GameObject Pierce = Instantiate(PiercePrefab) as GameObject;
@@ -407,13 +403,13 @@ public class BrickController : MonoBehaviour
         {
             case 1:
                 {
-                    if (Param.BlockRest<5 || Param.PlayedTime>180)
+                    if (Param.BlockRest < 5 || Param.PlayedTime > 180)
                     {
                         int num = Random.Range(0, 10000);
                         if (num <= 1)
                         {
                             GameObject Split = Instantiate(SplitPrefab) as GameObject;
-                            Split.transform.position = new Vector3(Random.Range(-3, 3),5, 0);
+                            Split.transform.position = new Vector3(Random.Range(-3, 3), 5, 0);
                         }
                     }
                 }
@@ -466,14 +462,14 @@ public class BrickController : MonoBehaviour
                         }
                         if (num == 1)
                         {
-                            GameObject Expand = Instantiate(ExpandPrefab) as GameObject;
-                            Expand.transform.position = new Vector3(Random.Range(-3, 3), 5, 0);
+                            GameObject Huge = Instantiate(HugePrefab) as GameObject;
+                            Huge.transform.position = new Vector3(Random.Range(-3, 3), 5, 0);
                         }
                     }
                 }
                 break;
         }
-        
+
     }
 }
 

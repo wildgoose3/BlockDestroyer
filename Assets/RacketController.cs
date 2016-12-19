@@ -47,10 +47,6 @@ public class RacketController : MonoBehaviour
         Next.SetActive(false);
 
         RB = GetComponent<Rigidbody>();
-
-        BlockGenerator();
-        NextGameStart();
-
         AudioSource[] audioSources = GetComponents<AudioSource>();
         SoundTitle = audioSources[0];
         GameOver = audioSources[1];
@@ -83,7 +79,12 @@ public class RacketController : MonoBehaviour
                 NextGameStart();
                 Param.StartPushed = false;
             }
-
+            GameObject BrickCheck;
+            BrickCheck = GameObject.Find("BrickPrefab(Clone)");
+            if (BrickCheck == null&& Param.GameStatus!="GAME OVER")
+            {
+                Param.GameStatus = "CLEAR!!";
+            }
             if (Param.Moving)
             {
                 Param.PlayedTime += Time.deltaTime;
@@ -174,12 +175,12 @@ public class RacketController : MonoBehaviour
             }
             else if (Param.GameStatus == "CLEAR!!")
             {
-                    if (ClearPlayed == false)
-                    {
-                        StageClear.PlayOneShot(StageClear.clip);
-                        ClearPlayed = true;
-                    }
-                    Next.SetActive(true);
+                if (ClearPlayed == false)
+                {
+                    StageClear.PlayOneShot(StageClear.clip);
+                    ClearPlayed = true;
+                }
+                Next.SetActive(true);
                 Param.ShieldTime = 0;
                 if (Input.GetKeyDown(KeyCode.Space) || NextPushed)
                 {
@@ -307,6 +308,7 @@ public class RacketController : MonoBehaviour
         switch (Param.Stage)
         {
             case 1:
+                Param.BlockRest = 0;
                 for (float j = 2; j <= 3.5; j += 0.5f)
                 {
                     for (float i = -3; i <= 3; i++)
@@ -324,6 +326,7 @@ public class RacketController : MonoBehaviour
                 }
                 break;
             case 2:
+                Param.BlockRest = 0;
                 for (float j = 2; j <= 4; j += 2)
                 {
                     for (float i = -3; i <= 3; i++)
@@ -362,6 +365,7 @@ public class RacketController : MonoBehaviour
                 break;
             case 3:
                 {
+                    Param.BlockRest = 0;
                     for (float i = -3; i <= 1; i++)
                     {
                         GameObject Brick = Instantiate(BrickPrefab) as GameObject;
@@ -415,6 +419,7 @@ public class RacketController : MonoBehaviour
                 break;
             case 4:
                 {
+                    Param.BlockRest = 0;
                     for (float j = 4; j < 5; j += 0.25f)
                     {
                         for (float i = -1.5f; i <= 1.5f; i++)
@@ -458,7 +463,7 @@ public class RacketController : MonoBehaviour
                     }
                     for (float j = 1; j < 2; j += 0.25f)
                     {
-                        for (float i =2; i <= 3; i++)
+                        for (float i = 2; i <= 3; i++)
                         {
                             GameObject Brick = Instantiate(BrickPrefab) as GameObject;
                             Brick.transform.position = new Vector3(i, j, 0);
@@ -468,12 +473,9 @@ public class RacketController : MonoBehaviour
                     }
                     for (float j = 1; j < 2; j += 0.25f)
                     {
-                        for (float i = -1; i <= 1; i++)
-                        {
                             GameObject HardBlock = Instantiate(HardBlockPrefab) as GameObject;
-                            HardBlock.transform.position = new Vector3(i, j, 0);
+                            HardBlock.transform.position = new Vector3(0, j, 0);
                             HardBlock.gameObject.tag = "Wall";
-                        }
                     }
                     for (float j = 0; j < 1; j += 0.25f)
                     {
